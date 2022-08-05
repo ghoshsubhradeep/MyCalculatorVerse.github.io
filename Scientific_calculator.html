@@ -1,0 +1,333 @@
+<html>
+    <head>
+        <title>SCIENTIFIC CALCULATOR</title>
+        <style>
+            /* css code to apply styles to webpage */
+            .tab{
+                font-size:30px;
+                background-color:coral;
+                color:rgb(265, 230, 39);
+            }
+            input[type=text]{
+                font-size:30px;
+                width:100%;
+            }
+            input[type=button]{
+                border-radius:20px;
+                font-size:40px;
+                width:100%;
+                background-color:darkolivegreen;
+                color:black;
+            }
+            h1{
+                color:crimson;
+            }
+        </style>
+        <script>
+            //Javascript code
+            var prev;
+                //function appends input stream by button clicked
+            function dis(val)
+            {
+                document.getElementById('n').value+=val;
+            }
+               //function clears all textbox fields
+            function clr()
+            {
+                document.getElementById('n').value='';
+                document.getElementById('res').value='';
+            }
+                //function to generate factorial of a number
+            function factorial(val)
+            {
+                          //checking for integer value to find factorial
+                    if(!Number.isInteger(val))
+                    {
+                        //console.log("Here1");
+                        return "e";
+                    }
+                    else
+                    {
+                            //checks whether it's a negative integer or not
+                        if(val<0)
+                        {
+                            //console.log("Here2");
+                            return "e";
+                        }
+                        else
+                        {
+                                //console.log("Here3");
+                                var f=1;
+                                for(i=1;i<=val;i++)
+                                  f*=i;
+                                return f;  
+                        }
+                    }
+            }
+                 //function to evaluate input stream
+            function solve()
+            {
+                var str1,str2;
+                var x=document.getElementById('n').value;  //storing input stream value to a variable
+                console.log("x=",x);
+                     //replacing input stream values for evaluation using replace("previous","new") method
+                x=x.replace("π","Math.PI");
+
+                x=x.replace("ln2","Math.LN2");
+                x=x.replace("ln10","Math.LN10");
+                x=x.replace("ln","Math.log");
+
+                x=x.replace("log10","Math.log10");
+
+                x=x.replace("sin","Math.sin");
+                x=x.replace("cos","Math.cos");
+                x=x.replace("tan","Math.tan");
+                
+                x=x.replace("log2e","Math.LOG2E");
+
+                x=x.replace("Ans",prev);
+                //console.log("After all replace=",x);
+                     //checks for all 1 and replaces by value of factorial
+                while(x.includes("!"))
+                {
+                    var i1=x.indexOf("!");
+                    var i2=x.lastIndexOf("(",i1);
+                    var subx=x.substring(i2+1,i1-1)
+                    str1=x.substring(0,i2);
+                    str2=x.substring(i1+1,x.length);
+                    //console.log("str1="+str1+"  str2="+str2+"  subx="+subx);
+                    try
+                    {
+                         var y=eval(subx);
+                         subx=y;
+                   }
+                   catch(exception)
+                   {
+                         subx="e";
+                   }
+                   x=str1+factorial(subx)+str2;
+                }
+                //console.log("After factorial omit=",x)
+                    //checks for all e^ in input stream and replaces by Math.exp()
+                while(x.includes("e^"))
+                {
+                    var ind=x.indexOf("^");
+                    str1=x.substring(0,ind+1);
+                    var i=new Array();
+                    i[0]=x.indexOf("+",ind);
+                    i[1]=x.indexOf("-",ind);
+                    i[2]=x.indexOf("*",ind);
+                    i[3]=x.indexOf("/",ind);
+                    for(j=0;j<4;j++)
+                    {
+                        if(i[j]==-1)
+                        {
+                            i[j]=999;
+                        }
+                    }
+                    var min=i[0];
+                    for(j=1;j<4;j++)
+                    {
+                        if(i[j]<min)
+                        {
+                            min=i[j];
+                        }
+                    }
+                    //console.log("min=",min);
+                    var subx=x.substring(ind+1,min);
+                    str2=x.substring(min,x.length);
+                    //console.log("str1="+str1+"  str2="+str2+"  subx="+subx);
+                    str1=str1.replace("e^","Math.exp(");
+                    x=str1+subx+")"+str2;
+                }
+                //console.log("After e^ omit=",x);
+                
+                
+                if(x.includes("e")&&x[x.indexOf("e")+1]!="x"){
+                    x=x.replace("e","Math.E");  //replaces all e by Math.E
+                }
+
+                    //checks for all √ and replaces by Math.sqrt()
+                while(x.includes("√"))
+                {
+                    var ind=x.indexOf("√");
+                    str1=x.substring(0,ind+1);
+                    var i=new Array();
+                    i[0]=x.indexOf("+",ind);
+                    i[1]=x.indexOf("-",ind);
+                    i[2]=x.indexOf("*",ind);
+                    i[3]=x.indexOf("/",ind);
+                    for(j=0;j<4;j++)
+                    {
+                        if(i[j]==-1)
+                        {
+                            i[j]=999;
+                        }
+                    }
+                    var min=i[0];
+                    for(j=1;j<4;j++)
+                    {
+                        if(i[j]<min)
+                        {
+                            min=i[j];
+                        }
+                    }
+                    var subx=x.substring(ind+1,min);
+                    str2=x.substring(min,x.length);
+                    str1=str1.replace("√","Math.sqrt(");
+                    x=str1+subx+")"+str2;
+                }
+                    //checks for all ^ and replaces by Math.pow()
+                while(x.includes("^"))
+                {
+                         //code for pow 1st argument
+                    var ind=x.indexOf("^");
+                    var i=new Array();
+                    i[0]=x.lastIndexOf("+",ind);
+                    i[1]=x.lastIndexOf("-",ind);
+                    i[2]=x.lastIndexOf("*",ind);
+                    i[3]=x.lastIndexOf("/",ind);
+                    for(j=0;j<4;j++)
+                    {
+                        if(i[j]==-1)
+                        {
+                            i[j]=0;
+                        }
+                    }
+                    var max=i[0];
+                    for(j=1;j<4;j++)
+                    {
+                        if(i[j]>max)
+                        {
+                            max=i[j];
+                        }
+                    }
+                    if(max==0)
+                    {
+                        var str1="";
+                        var subx=x.substring(0,max+1);
+                        var str2=x.substring(ind+1,x.length);
+                    }
+                    else
+                    {
+                        var str1=x.substring(0,max+1);
+                        var subx=x.substring(max+1,ind); 
+                        var str2=x.substring(ind+1,x.length);
+                    }
+                    //console.log("max="+max+" str1="+str1+"  str2="+str2+"  subx="+subx);
+                    x=str1+"Math.pow("+subx+",";
+                        //code for pow 2nd argument
+                    i[0]=str2.indexOf("+");
+                    i[1]=str2.indexOf("-");
+                    i[2]=str2.indexOf("*");
+                    i[3]=str2.indexOf("/");
+                    for(j=0;j<4;j++)
+                    {
+                        if(i[j]==-1)
+                        {
+                            i[j]=999;
+                        }
+                    }
+                    var min=i[0];
+                    for(j=1;j<4;j++)
+                    {
+                        if(i[j]<min)
+                        {
+                            min=i[j];
+                        }
+                    }
+                    var str2_1=str2.substring(0,min);
+                    var str2_2=str2.substring(min,str2.length);
+                    //console.log("min="+min+" str2_1="+str2_1+"  str2_2="+str2_2);
+                    x=x+str2_1+")"+str2_2;
+                }
+                //console.log("After omit ^=",x);
+                console.log("Evaluating expression=",x);
+                try{
+                          var y=eval(x);
+                          document.getElementById('res').value=y;
+                   }
+                catch(exception){
+                          document.getElementById('res').value="Invalid Syntax";
+                    }
+                prev=y;
+            }
+            function delchar()
+            {
+                         //decrease length of display field by 1
+                document.getElementById('n').value=document.getElementById('n').value.substring(0,document.getElementById('n').value.length-1);
+            }
+        </script>
+    </head>
+    <body bgcolor=lightblue>
+        <center>
+            <h1>SCIENTIFIC CALCULATOR</h1>
+            <table class=tab cellpadding=10 cellspacing=10>
+                <tr>
+                    <td colspan=8><input type=text id=n size=50 placeholder="Input" disabled></td>
+                </tr>
+                <tr>
+                    <td colspan=8><input type=text id=res size=50 placeholder="Output" disabled></td>
+                </tr>
+                <!--tr>
+                    <td colspan=8><input type=button value=Ans onclick="dis('Ans')"></td>
+                </tr-->
+                <tr>
+                    <td colspan=2><input type=button value="<---" onclick="delchar()"></td>
+                    <td colspan=2><input type=button value="&#960" onclick="dis('&#960')"></td>
+                    <td colspan=2><input type=button value="&#94" onclick="dis('&#94')"></td>
+                    <td colspan=2><input type=button value=% onclick="dis('%')"></td>
+                </tr>
+                <tr>
+                    <td colspan=2><input type=button value="n!" onclick="dis('!')"></td>
+                    <td colspan=2><input type=button value="e" onclick="dis('e')"></td>
+                    <td colspan=2><input type=button value="e&#94" onclick="dis('e&#94')"></td>
+                    <td colspan=2><input type=button value="&#8730" onclick="dis('&#8730')"></td>
+                </tr>
+                <tr>
+                    <td colspan=2><input type=button value="ln" onclick="dis('ln(')"></td>
+                    <td colspan=2><input type=button value="log10"  onclick="dis('log10(')"></td>
+                    <td colspan=2><input type=button value=(  onclick="dis('(')"></td>
+                    <td colspan=2><input type=button value=) onclick="dis(')')"></td>
+                </tr>
+                <tr>
+                    <td colspan=2><input type=button value=sin onclick="dis('sin(')"></td>
+                    <td colspan=2><input type=button value=cos onclick="dis('cos(')"></td>
+                    <td colspan=2><input type=button value=tan onclick="dis('tan(')"></td>
+                    <td colspan=2><input type=button value="ln2" onclick="dis('ln2')"></td>
+                </tr>
+                <tr>
+                    <td colspan=2><input type=button value=AC onclick="clr()"></td>
+                    <td colspan=2><input type=button value=ln10 onclick="dis('ln10')"></td>
+                    <td colspan=2><input type=button value="Ans" onclick="dis('Ans')"></td>
+                    <td colspan=2><input type=button value=log2e onclick="dis('log2e')"></td>
+
+                </tr>
+                <tr>
+                    <td colspan=2><input type=button value=+ onclick="dis('+')"></td>
+                    <td colspan=2><input type=button value=1 onclick="dis('1')"></td>
+                    <td colspan=2><input type=button value=2 onclick="dis('2')"></td>
+                    <td colspan=2><input type=button value=3 onclick="dis('3')"></td>  
+                </tr>
+                <tr>
+                    <td colspan=2><input type=button value=- onclick="dis('-')"></td>
+                    <td colspan=2><input type=button value=4 onclick="dis('4')"></td>
+                    <td colspan=2><input type=button value=5 onclick="dis('5')"></td>
+                    <td colspan=2><input type=button value=6 onclick="dis('6')"></td>  
+                </tr>
+                <tr>
+                    <td colspan=2><input type=button value=* onclick="dis('*')"></td>
+                    <td colspan=2><input type=button value=7 onclick="dis('7')"></td>
+                    <td colspan=2><input type=button value=8 onclick="dis('8')"></td>
+                    <td colspan=2><input type=button value=9 onclick="dis('9')"></td>  
+                </tr>
+                <tr>
+                    <td colspan=2><input type=button value=/ onclick="dis('/')"></td>
+                    <td colspan=2><input type=button value=. onclick="dis('.')"></td>
+                    <td colspan=2><input type=button value=0 onclick="dis('0')"></td>
+                    <td colspan=2><input type=button value== onclick="solve()"></td>  
+                </tr>
+            </table>
+        </center>
+    </body>
+</html>

@@ -1,0 +1,128 @@
+<html>
+    <head>
+        <title>Simple Calculator</title>
+        <style>
+            .tab{
+                font-size:30px;
+                background-color:mediumslateblue
+            }
+            input[type=text]{
+                font-size:30px;
+                width:100%;
+                background-color: coral;
+                color:black;
+            }
+            input[type=button]{
+                border-radius:40px;
+                font-size:40px;
+                width:100%;
+                background-color:darkolivegreen;
+                color:black;
+            }
+            h1{
+                color:crimson;
+            }
+        </style>
+        <script>
+            var prev;
+                   //function to display pressed button in input stream
+            function dis(val)
+            {
+                document.getElementById('in').value+=val;
+            }
+                 //function to clears input output fields
+            function clr()
+            {
+                document.getElementById('in').value='';
+                document.getElementById('out').value='';
+            }
+                 //function to solve input stream's expression using eval() method
+            function solve()
+            {
+                var x=document.getElementById('in').value;
+                if(x.includes("%"))  //checks whether input stream includes % or not
+                {
+                    var n=x.substring(0,x.length-1);   //generates substring from input stream
+                    if(x.includes('Ans'))    //checks whether input stream includes Ans or not
+                   {
+                       x="prev/100";
+                   }
+                   else
+                   {
+                       x="n/100";
+                   }
+                }
+                else if(x.includes('Ans'))   //checks whether input stream includes Ans or not
+                {
+                    var n=x.indexOf('A');    //search for first occurence of a in x and returns it's index
+                    var str1=x.substring(0,n);
+                    var str2=x.substring(n+3,x.length);
+                    x=str1+prev+str2;    //concatenation
+                }
+                //console.log(x);
+                   //try...catch clause
+                try{
+                          var y=eval(x);    //eval() method
+                          document.getElementById('out').value=y;
+                   }
+                     catch(exception)
+                     {
+                          document.getElementById('out').value="Invalid Syntax";
+                     }
+                     prev=y;
+           }
+                //deletes character from input stream
+            function delchar()
+            {
+                         //decresinh length of display field by 1
+                document.getElementById('in').value=document.getElementById('in').value.substring(0,document.getElementById('in').value.length-1);
+            }
+        </script>
+    </head>
+    <body bgcolor=lightblue>
+        <center>
+            <h1>Simple Calculator</h1>
+                 <!--code for creating virtual calculator-->
+            <table class=tab cellpadding=10>
+                <tr>
+                    <td colspan=4><input type=text id="in" size=30 placeholder="Input" disabled></td>
+                </tr>
+                <tr>
+                    <td colspan=4><input type=text id="out" size=30 placeholder="Output"  disabled></td>
+                </tr>
+                <tr>
+                    <td><input type=button value=AC onclick="clr()"></td>
+                    <td><input type=button value="DEL" onclick="delchar()"></td>
+                    <td><input type=button value=% onclick="dis('%')"></td>
+                    <td><input type=button value=/ onclick="dis('/')"></td>
+                </tr>
+                <tr>
+                    <td><input type=button value=7 onclick="dis('7')"></td>
+                    <td><input type=button value=8 onclick="dis('8')"></td>
+                    <td><input type=button value=9 onclick="dis('9')"></td>
+                    <td><input type=button value=* onclick="dis('*')"></td>
+                </tr>
+                <tr>
+                    <td><input type=button value=4 onclick="dis('4')"></td>
+                    <td><input type=button value=5 onclick="dis('5')"></td>
+                    <td><input type=button value=6 onclick="dis('6')"></td>
+                    <td><input type=button value=- onclick="dis('-')"></td>
+                </tr>
+                <tr>
+                    <td><input type=button value=1 onclick="dis('1')"></td>
+                    <td><input type=button value=2 onclick="dis('2')"></td>
+                    <td><input type=button value=3 onclick="dis('3')"></td>
+                    <td><input type=button value=+ onclick="dis('+')"></td>
+                </tr>
+                <tr>
+                    <td colspan=2><input type=button value=0 onclick="dis('0')"></td>
+                    <td><input type=button value=. onclick="dis('.')"></td>
+                    <td><input type=button value== onclick="solve()"></td>
+                </tr>
+                <tr>
+                    <td colspan=4><input type=button value=Ans onclick="dis('Ans')"></td>
+                </tr>
+            </table>
+        </center>
+    </body>
+</html>
